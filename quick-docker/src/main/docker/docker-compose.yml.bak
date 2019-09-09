@@ -1,0 +1,19 @@
+version: '3'
+services:
+  quick-docker-service:
+    image: "developer23/quick-docker"
+    ports:
+      - "8080:8080"
+    container_name: quick-docker
+  prometheus:
+    image: "prom/prometheus"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ${PWD}/prom.yml:/etc/prometheus/prometheus.yml
+    container_name: prometheus
+  grafana:
+    image: "grafana/grafana"
+    ports:
+      - "3000:3000"
+    container_name: grafana
