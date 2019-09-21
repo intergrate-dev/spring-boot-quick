@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Configuration>
+    <Properties>
+        <!--<property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} -%5p ${PID:-} [%15.15t] %-30.30C{1.} : %m%n</property>-->
+        <property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80} -%msg%n</property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+        </Console>
+
+        <!--<RollingFile name="RollingFile" fileName="./logs/main.log"
+                     filePattern="./logs/$${date:yyyy-MM-dd}/xinyar-%d{MM-dd-yyyy}-%i.log.gz"
+                     immediateFlush="false" append="true">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+            &lt;!&ndash; 每个文件大小 &ndash;&gt;
+            &lt;!&ndash; <SizeBasedTriggeringPolicy size="50M" /> &ndash;&gt;
+            &lt;!&ndash; <SizeBasedTriggeringPolicy size="50KB" /> &ndash;&gt;
+            <SizeBasedTriggeringPolicy size="20M" />
+            &lt;!&ndash; 不设置，同一文件夹下默认最多7个文件，这里设置同一文件夹下最多50个文件 &ndash;&gt;
+            <DefaultRolloverStrategy max="50" />
+        </RollingFile>-->
+
+        <Socket name="logstash-tcp" host="192.168.122.1" port="5044" protocol="TCP">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+        </Socket>
+    </Appenders>
+    <Loggers>
+        <!-- 异步发送logstash -->
+        <!-- 如果使用<asyncRoot> 或 <asyncLogger>，includeLocation="true"是必须要设置才会有类路径等一些信息打印出来 -->
+        <AsyncLogger name="com.docker" level="info" includeLocation="true" >
+            <appender-ref ref="logstash-tcp" />
+        </AsyncLogger>
+
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <!--<AppenderRef ref="RollingFile"/>-->
+        </Root>
+    </Loggers>
+</Configuration>

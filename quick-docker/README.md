@@ -27,8 +27,8 @@ mvn clean package docker:build
 
 ### Prometheus+Grafana
 reference: https://www.cnblogs.com/niechen/p/10150004.html
-#### precompare
-pom, application.properties, *Application.java(集成grafana), docker-compose.yml+prom.yml(regist).
+#### prepare
+pom, application.properties, *Application.java(集成grafana), docker-compose.yml+prom.yml(register).
 At last, run app and validate url "http://localhost:8080/actuator/prometheus"
 
 #### prometheus
@@ -42,6 +42,8 @@ import jvm-micrometer
 https://grafana.com/dashboards/4701
 (https://grafana.com/grafana/dashboards)
 
+#### stop service
+docker-compose stop quick-docker-service
 
 
 #### 报警信息配置
@@ -80,3 +82,13 @@ scrape_configs:
 
 ```
 
+
+### logstash
+install  
+https://blog.csdn.net/qq_33547169/article/details/86629261
+
+https://blog.csdn.net/gekkoou/article/details/80986017
+
+https://www.jianshu.com/p/9170a7a65dd4
+
+https://blog.csdn.net/puhaiyang/article/details/69664891
