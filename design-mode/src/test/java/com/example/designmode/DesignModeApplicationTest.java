@@ -1,12 +1,24 @@
 package com.example.designmode;
 
-import com.example.designmode.strategymode.model.DemoPojo;
+import com.example.designmode.factorymode.abstractfactory.factory.IDBFactory;
+import com.example.designmode.factorymode.abstractfactory.factory.MysqlFactory;
+import com.example.designmode.factorymode.abstractfactory.factory.OricleFactory;
+import com.example.designmode.factorymode.abstractfactory.service.DepartmentService;
+import com.example.designmode.factorymode.abstractfactory.service.UserService;
+import com.example.designmode.factorymode.factorymethod.Handler.DBHandler;
+import com.example.designmode.factorymode.factorymethod.Handler.IOHandler;
+import com.example.designmode.factorymode.factorymethod.factory.IOFactory;
+import com.example.designmode.factorymode.factorymethod.factory.XmlFactory;
+import com.example.designmode.factorymode.factorymethod.other.IOSimpleFactory;
+import com.example.designmode.factorymode.simplefactory.factory.HandlerFactory;
 import com.example.designmode.strategymode.model.SqlParam;
-import com.example.designmode.strategymode.service.StrategyService;
 import com.example.designmode.strategymode.util.ParamValidateUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -18,6 +30,16 @@ import java.util.List;
 @SpringBootTest
 public class DesignModeApplicationTest {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private HandlerFactory handlerFactory;
+
+    //@Autowired
+    private UserService userService;
+
+    //@Autowired
+    private DepartmentService departmentService;
 
     @Test
     public void contextLoads() {
@@ -28,6 +50,38 @@ public class DesignModeApplicationTest {
     @Test
     public void test() throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
         //testStrategyMode();
+        //testSimpleFactory();
+        //testFactoryMethod();
+        testAbstractFactory();
+    }
+
+    private void testAbstractFactory() {
+        IDBFactory factory1 = new MysqlFactory();
+
+        userService = factory1.createUser();
+        userService.setUser(1,"晓明");
+        userService.getUserName(1);
+
+        IDBFactory factory2 = new OricleFactory();
+        departmentService = factory2.createDepartment();
+        departmentService.setDepartment(1,"技术部");
+        departmentService.getDepartmentName(1);
+
+    }
+    private void testFactoryMethod(){
+        /*IOFactory factory = new XmlFactory();
+        IOHandler handler = factory.getHandler();*/
+        // 用简单工厂实现的测试
+        IOHandler handler = IOSimpleFactory.getHandler(DBHandler.class);
+
+        handler.add("name","小明");
+        handler.update("name","小红");
+        handler.query("name");
+        handler.remove("name");
+    }
+    private void testSimpleFactory() {
+        handlerFactory.getHandlerByName("axxHandler").print();
+        handlerFactory.getHandlerByName("bxxHandler").print();
     }
 
     /**
